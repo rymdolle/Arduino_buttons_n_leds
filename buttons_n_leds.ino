@@ -15,21 +15,17 @@ unsigned long long last_ms = 0;
 
 void setup()
 {
-  // Init serial communication
-  Serial.begin(9600);
-
   // Select button
-  pinMode(2, OUTPUT);
-  pinMode(3, OUTPUT);
+  pinMode(BTN_INPUT_A, OUTPUT);
+  pinMode(BTN_INPUT_B, OUTPUT);
 
   // Button read
-  pinMode(7, INPUT);
+  pinMode(BTN_OUTPUT_Y1, INPUT);
+  pinMode(BTN_OUTPUT_Y2, INPUT);
 
   // Leds
-  pinMode(8,  OUTPUT);
-  pinMode(9,  OUTPUT);
-  pinMode(10, OUTPUT);
-  pinMode(11, OUTPUT);
+  for (int i = 0; i < LED_PIN_COUNT; ++i)
+    pinMode(LED_PIN_FIRST + i,  OUTPUT);
 
   // Read startup value from EEPROM
   leds = EEPROM.read(0);
@@ -92,7 +88,7 @@ int read_buttons()
     digitalWrite(BTN_INPUT_A, i & 1);
     digitalWrite(BTN_INPUT_B, (i >> 1) & 1);
     state |= digitalRead(BTN_OUTPUT_Y1) << i;
-    //state |= digitalRead(BTN_OUTPUT_Y2) << i;
+    state |= digitalRead(BTN_OUTPUT_Y2) << i+4;
   }
   return state;
 }
